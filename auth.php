@@ -53,3 +53,45 @@ if (isset($_POST['login']) && !isset($_POST['action'])) {
 }
 
 
+/************
+ * REGISTER *
+ ***********/
+
+if (isset($_POST['login']) && isset($_POST['password']) && $_POST['action'] == 'register') {
+    $login = $_POST['login'];
+    $password = $_POST['password'];
+    $passwordRepeat = $_POST['passwordRepeat'];
+    $email = $_POST['email'];
+
+    if (empty($password) && empty($passwordRepeat)) {
+        echo '<p id="error">Введите и повторите пароль</p>';
+        die;
+    }
+
+    if (empty($email)) {
+        echo '<p id="error">Вы не ввели почту</p>';
+        die;
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo '<p id="error">E-mail указан не верно</p>';
+        die;
+    }
+
+
+    if ($password != $passwordRepeat) {
+        echo '<p id="error">Пароли не совпадают</p>';
+        die;
+    }
+
+    $connect = mysqli_connect(HOST, USER, PASS, DB_NAME) or die('Error database');
+    $query = "INSERT INTO `users` SET `login` = '{$login}', `password` = '{$password}', `email` = '{$email}'";
+    $result = mysqli_query($connect, $query);
+    mysqli_close($connect);
+
+    if ($result === true) {
+        echo '<p id="success">Вы успешно зарегистрировались</p>';
+    } else {
+        echo '<p id="error">Ошибка регистрации</p>';
+    }
+}
