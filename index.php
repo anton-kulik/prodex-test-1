@@ -127,6 +127,33 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
             }
         };
     }
+	
+	function ajaxRegister() {
+        var login = document.getElementById('login').value;
+        var password = document.getElementById('password').value;
+        var passwordRepeat = document.getElementById('passwordRepeat').value;
+        var email = document.getElementById('email').value;
+        var action = document.getElementById('action').value;
+        var xhr = new XMLHttpRequest();
+        var sendData = 'login=' + encodeURIComponent(login) + '&password=' + encodeURIComponent(password) + '&passwordRepeat=' + encodeURIComponent(passwordRepeat) + '&email=' + encodeURIComponent(email) + '&action=' + encodeURIComponent(action);
+        xhr.open('POST', 'auth.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send(sendData);
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    document.getElementById("resp").innerHTML = xhr.responseText;
+                    if (xhr.responseText === '<p id="success">Вы успешно зарегистрировались</p>') {
+                        setTimeout(function () {
+                                document.location.href = 'index.php';
+                            },
+                            2000
+                        )
+                    }
+                }
+            }
+        };
+    }
 
 </script>
 
